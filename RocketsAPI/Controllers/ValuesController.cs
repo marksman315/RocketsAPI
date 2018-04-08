@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace RocketsAPI.Controllers
 {
@@ -11,9 +13,10 @@ namespace RocketsAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Produces("application/json")]
+        public ObjectResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return new OkObjectResult(null);
         }
 
         // GET api/values/5
@@ -25,8 +28,11 @@ namespace RocketsAPI.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async void PostAsync(string value)
         {
+            var json = JObject.Parse(value);
+
+            await DocumentHandler.CreateFamilyDocumentIfNotExists(json);
         }
 
         // PUT api/values/5
