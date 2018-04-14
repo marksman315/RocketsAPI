@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,18 +13,13 @@ namespace RocketsAPI.Controllers
     public class ValuesController : Controller
     {
         // GET api/values
-        [HttpGet]
+        [HttpGet("{name}/{value}")]
         [Produces("application/json")]
-        public ObjectResult Get()
+        public ObjectResult Get(string name, string value)
         {
-            return new OkObjectResult(null);
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            var documents = DocumentHandler.GetDocuments(name, value);
+            
+            return new OkObjectResult(documents);
         }
 
         // POST api/values
@@ -32,18 +28,21 @@ namespace RocketsAPI.Controllers
         {
             var json = JObject.Parse(value);
 
-            await DocumentHandler.CreateFamilyDocumentIfNotExists(json);
+            await DocumentHandler.UpsertDocumentAsync(json);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // PUT api/values
+        [HttpPut]
+        public async void PutAsync(string value)
         {
+            var json = JObject.Parse(value);
+
+            await DocumentHandler.UpsertDocumentAsync(json);
         }
 
-        // DELETE api/values/5
+        // DELETE api/values/
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
         }
     }
