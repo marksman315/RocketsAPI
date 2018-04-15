@@ -11,7 +11,7 @@ namespace RocketsAPI
     public static class DocumentHandler
     {
         private const string endpointUri = "https://rockets.documents.azure.com:443/";
-        private const string primaryKey = "Add key to database here";
+        private const string primaryKey = "Add your key here";
         private const string databaseName = "Rockets";
         private const string collectionName = "Rockets";
 
@@ -45,8 +45,8 @@ namespace RocketsAPI
         {
             SqlQuerySpec query = new SqlQuerySpec("SELECT * FROM " + collectionName + " c WHERE c." + name + " = @value");
             query.Parameters = new SqlParameterCollection();
-            query.Parameters.Add(new SqlParameter("@value", value));
-
+            SetParameterWithCorrectType(query, value);
+            
             List<dynamic> results = new List<dynamic>();            
 
             using (var queryable = DBClient.CreateDocumentQuery<string>(DocumentCollectionUri, query,
@@ -69,6 +69,21 @@ namespace RocketsAPI
             }
 
             return results;
+        }
+        
+        private static void SetParameterWithCorrectType(SqlQuerySpec query, string value)
+        {
+            // this prevents quotes from automatically being placed in the query for non-string values
+            int numericValue;
+
+            if (int.TryParse(value, out numericValue))
+            {
+                query.Parameters.Add(new SqlParameter("@value", numericValue));
+            }
+            else
+            {
+                query.Parameters.Add(new SqlParameter("@value", value));
+            }
         }
     }
 }
