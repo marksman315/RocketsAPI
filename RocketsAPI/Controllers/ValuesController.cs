@@ -42,8 +42,9 @@ namespace RocketsAPI.Controllers
 
         // DELETE api/values/
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public ObjectResult Delete(string id)
         {
+            return new OkObjectResult("Delete not implemented");
         }
     }
 }
