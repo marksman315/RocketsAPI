@@ -22,6 +22,17 @@ namespace RocketsAPI
         {
             services.AddMvc();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnyOrigin", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Rockets API", Version = "v1" });
@@ -46,6 +57,8 @@ namespace RocketsAPI
             });
 
             app.UseMvc();
+
+            app.UseCors("AnyOrigin");
         }
     }
 }

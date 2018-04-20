@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ namespace RocketsAPI.Controllers
         // GET api/values
         [HttpGet("{name}/{value}")]
         [Produces("application/json")]
+        [EnableCors("AnyOrigin")]
         public ObjectResult Get(string name, string value)
         {
             var documents = DocumentHandler.GetDocuments(name, value);
