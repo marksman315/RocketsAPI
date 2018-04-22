@@ -15,8 +15,7 @@ namespace RocketsAPI.Controllers
     {
         // GET api/values
         [HttpGet("{name}/{value}")]
-        [Produces("application/json")]
-        [EnableCors("AnyOrigin")]
+        [Produces("application/json")]        
         public ObjectResult Get(string name, string value)
         {
             var documents = DocumentHandler.GetDocuments(name, value);
@@ -26,20 +25,26 @@ namespace RocketsAPI.Controllers
 
         // POST api/values
         [HttpPost]
-        public async void PostAsync(string value)
+        [Produces("application/json")]
+        public async Task<ObjectResult> PostAsync([FromBody]string value)
         {
             var json = JObject.Parse(value);
 
             await DocumentHandler.UpsertDocumentAsync(json);
+
+            return new OkObjectResult("Ok");
         }
 
         // PUT api/values
         [HttpPut]
-        public async void PutAsync(string value)
+        [Produces("application/json")]
+        public async Task<ObjectResult> PutAsync([FromBody]string value)
         {
             var json = JObject.Parse(value);
 
             await DocumentHandler.UpsertDocumentAsync(json);
+
+            return new OkObjectResult("Ok");
         }
 
         // DELETE api/values/

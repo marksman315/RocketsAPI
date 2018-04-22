@@ -11,7 +11,7 @@ namespace RocketsAPI
     public static class DocumentHandler
     {
         private const string endpointUri = "https://rockets.documents.azure.com:443/";
-        private const string primaryKey = "Add your key here";
+        private const string primaryKey = "add your key here";
         private const string databaseName = "Rockets";
         private const string collectionName = "Rockets";
 
@@ -42,11 +42,9 @@ namespace RocketsAPI
         }
 
         public static async Task<List<dynamic>> GetDocuments(string name, string value)
-        {
-            SqlQuerySpec query = new SqlQuerySpec("SELECT * FROM " + collectionName + " c WHERE c." + name + " = @value");
-            query.Parameters = new SqlParameterCollection();
-            SetParameterWithCorrectType(query, value);
-            
+        {            
+            SqlQuerySpec query = CreateQueryBasedOnDataType(name, value);
+
             List<dynamic> results = new List<dynamic>();            
 
             using (var queryable = DBClient.CreateDocumentQuery<string>(DocumentCollectionUri, query,
@@ -69,6 +67,28 @@ namespace RocketsAPI
             }
 
             return results;
+        }
+
+        private static SqlQuerySpec CreateQueryBasedOnDataType(string name, string value)
+        {
+            SqlQuerySpec query;
+            int numericValue;
+            
+            if (int.TryParse(value, out numericValue))
+            {
+                query = new SqlQuerySpec("SELECT * FROM " + collectionName + " c WHERE c." + name + " = @value");
+                query.Parameters = new SqlParameterCollection();
+                query.Parameters.Add(new SqlParameter("@value", numericValue));
+            }
+            else
+            {
+                // convert to lower to ensure all valid results are returned
+                query = new SqlQuerySpec("SELECT * FROM " + collectionName + " c WHERE CONTAINS(LOWER(c." + name + "), LOWER(@value))");
+                query.Parameters = new SqlParameterCollection();
+                query.Parameters.Add(new SqlParameter("@value", value));
+            }
+
+            return query;
         }
         
         private static void SetParameterWithCorrectType(SqlQuerySpec query, string value)

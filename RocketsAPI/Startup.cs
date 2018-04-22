@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace RocketsAPI
@@ -19,19 +20,12 @@ namespace RocketsAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AnyOrigin", builder =>
+        {            
+            services.AddMvc()
+                .AddJsonOptions(options =>
                 {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                    options.SerializerSettings.Formatting = Formatting.Indented;
                 });
-            });
 
             services.AddSwaggerGen(c =>
             {
@@ -55,10 +49,8 @@ namespace RocketsAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rockets API V1");
             });
-
-            app.UseMvc();
-
-            app.UseCors("AnyOrigin");
+           
+            app.UseMvc();            
         }
     }
 }
