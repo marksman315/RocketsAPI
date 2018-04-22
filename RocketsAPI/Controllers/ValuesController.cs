@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace RocketsAPI.Controllers
 {
@@ -26,11 +19,9 @@ namespace RocketsAPI.Controllers
         // POST api/values
         [HttpPost]
         [Produces("application/json")]
-        public async Task<ObjectResult> PostAsync([FromBody]string value)
-        {
-            var json = JObject.Parse(value);
-
-            await DocumentHandler.UpsertDocumentAsync(json);
+        public async Task<ObjectResult> PostAsync([FromBody]dynamic value)
+        {            
+            await DocumentHandler.UpsertDocumentAsync(value);
 
             return new OkObjectResult("Ok");
         }
@@ -38,14 +29,12 @@ namespace RocketsAPI.Controllers
         // PUT api/values
         [HttpPut]
         [Produces("application/json")]
-        public async Task<ObjectResult> PutAsync([FromBody]string value)
-        {
-            var json = JObject.Parse(value);
-
-            await DocumentHandler.UpsertDocumentAsync(json);
+        public async Task<ObjectResult> PutAsync([FromBody]dynamic value)
+        {            
+            await DocumentHandler.UpsertDocumentAsync(value);
 
             return new OkObjectResult("Ok");
-        }
+        }        
 
         // DELETE api/values/
         [HttpDelete("{id}")]
