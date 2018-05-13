@@ -29,13 +29,14 @@ namespace RocketsAPI
         #region Public Static Methods
 
         /// <summary>
-        /// Set the database and collection used for queries
+        /// Set the database and collection used for queries. Call this in the Startup.Startup() method
         /// </summary>
         /// <returns></returns>
         public static async Task InitializeDocumentClientAsync()
         {
             DBClient = new DocumentClient(new Uri(endpointUri), primaryKey);
 
+            // sets the database for the DocumentClient. Since there is only one database the name does not need to be specified
             await DBClient.GetDatabaseAccountAsync();
 
             await DBClient.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(databaseName), new DocumentCollection { Id = collectionName });

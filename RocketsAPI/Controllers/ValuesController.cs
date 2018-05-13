@@ -25,23 +25,13 @@ namespace RocketsAPI.Controllers
             await DocumentHandler.UpsertDocumentAsync(value);
 
             return new OkObjectResult("Ok");
-        }
-
-        // PUT api/values
-        //[HttpPut]
-        //[Produces("application/json")]
-        //public async Task<ObjectResult> PutAsync([FromBody]dynamic value)
-        //{            
-        //    await DocumentHandler.UpsertDocumentAsync(value);
-
-        //    return new OkObjectResult("Ok");
-        //}        
+        }      
 
         // DELETE api/values/
         [HttpDelete("{id}")]
         public ObjectResult Delete(string id)
         {
-            return new OkObjectResult("Delete not implemented");
+            return new OkObjectResult("Denied! You cannot delete me!");
         }
     }
 }
