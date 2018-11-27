@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RocketsAPI.Controllers
@@ -8,7 +9,7 @@ namespace RocketsAPI.Controllers
     {
         // GET api/values
         [HttpGet("{name}/{value}")]
-        [Produces("application/json")]        
+        [Produces("application/json")]
         public ObjectResult Get(string name, string value)
         {
             var documents = DocumentHandler.GetDocuments(name, value);

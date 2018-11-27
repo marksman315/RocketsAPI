@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,9 @@ namespace RocketsAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            services.AddCors();
+
             services.AddMvc()
                 .AddJsonOptions(options =>
                 {
@@ -49,8 +52,10 @@ namespace RocketsAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rockets API V1");
             });
-           
-            app.UseMvc();            
+                     
+            app.UseCors(options => options.WithOrigins("https://localhost:44352/").AllowAnyMethod());
+
+            app.UseMvc();
         }
     }
 }
